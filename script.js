@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         if (words.length === 0 && questionQueue.length > 0) {
-            words.push(...questionQueue.splice(0, questionQueue.length));
+           questionQueue.splice(0, questionQueue.length));
         }
         let wordData;
         do {
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 currentBlanksCount--;
                 currentBlanks = newBlanks;
-                gameContainer.innerHTML = `<p>${currentBlanks}</p><p style="color: red;">Incorrect answer!</p>`;
+                gameContainer.innerHTML = `<p>${currentBlanks}</p><p style="color: red;">Incorrect answer! Correct answer is: ${currentWord}</p>`;
                 setTimeout(() => {
                     showNextWord();
                 }, 1500);
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 incorrectWords.push(currentWord);
             }
             questionQueue.push({ word: currentWord, comment: words.find(w => w.word === currentWord).comment });
-            gameContainer.innerHTML += `<p style="color: red;">Incorrect answer!</p>`;
+            gameContainer.innerHTML += `<p style="color: red;">Incorrect answer! Correct answer is: ${currentWord}</p>`;
             setTimeout(() => {
                 showNextWord();
             }, 1500);
