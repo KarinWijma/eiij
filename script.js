@@ -66,11 +66,14 @@ function kies(keuze) {
     const juiste = blanks[keuzesIndex];
     const woordEl = document.getElementById("woord-container");
     const huidigHTML = woordEl.innerHTML;
-    const split = huidigHTML.split("__");
+
     let kleur = keuze === juiste ? "correct" : "incorrect";
-    let correctie = `<span class="${kleur}">${juiste}</span>`;
-    split[keuzesIndex] += correctie;
-    woordEl.innerHTML = split.join("__");
+    let correctie = `<span class="${kleur}">${keuze}</span>`;
+
+    // Vervang de eerste "__" met de keuze
+    const nieuwHTML = huidigHTML.replace("__", correctie);
+    woordEl.innerHTML = nieuwHTML;
+
     keuzesIndex++;
     if (keuzesIndex >= blanks.length) {
         setTimeout(() => {
