@@ -68,14 +68,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const blanksCount = (currentBlanks.match(/__/g) || []).length;
         if (blanksCount > 0) {
             const newBlanks = currentBlanks.replace('__', answer);
-            if (newBlanks === currentWord) {
-                correctAnswers++;
-                streakLength++;
+            if (currentWord.includes(newBlanks.replace(/__/g, ''))) {
                 currentBlanks = newBlanks;
                 gameContainer.innerHTML = `<p>${currentBlanks}</p><p style="color: green;">Correct answer!</p>`;
-                setTimeout(() => {
-                    showNextWord();
-                }, 1500);
+                if (currentBlanks === currentWord) {
+                    correctAnswers++;
+                    streakLength++;
+                    setTimeout(() => {
+                        showNextWord();
+                    }, 1500);
+                }
             } else {
                 currentBlanksCount--;
                 currentBlanks = newBlanks;
