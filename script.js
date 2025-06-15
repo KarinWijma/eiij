@@ -64,7 +64,7 @@
                     return;
                 }
                 if (words.length === 0 && questionQueue.length > 0) {
-                   questionQueue.splice(0, questionQueue.length));
+                    words.push(...questionQueue.splice(0, questionQueue.length));
                 }
                 let wordData;
                 do {
@@ -119,14 +119,4 @@
             eiButton.addEventListener('click', () => checkAnswer('ei'));
 
             function endGame() {
-                alert(`Game Over!\nCorrect Answers: ${correctAnswers}\nIncorrect Answers: ${incorrectAnswers}\nStreak Length: ${streakLength}\nIncorrect Words: ${incorrectWords.join(', ')}`);
-            }
-
-            // Force start the game
-            if (words.length > 0) {
-                showNextWord();
-            }
-        });
-    </script>
-</body>
-</html>
+                alert(`Game Over!\nCorrect Answers: ${correctAnswers}\n
