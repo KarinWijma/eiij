@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function startSpel() {
     huidigeIndex = 0;
+    woorden = woorden.sort(() => Math.random() - 0.5); // shuffle de woordenlijst
     toonVolgendWoord();
 }
 
