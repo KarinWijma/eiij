@@ -119,4 +119,14 @@
             eiButton.addEventListener('click', () => checkAnswer('ei'));
 
             function endGame() {
-                alert(`Game Over!\nCorrect Answers: ${correctAnswers}\n
+                alert(`Game Over!\nCorrect Answers: ${correctAnswers}\nIncorrect Answers: ${incorrectAnswers}\nStreak Length: ${streakLength}\nIncorrect Words: ${incorrectWords.join(', ')}`);
+            }
+
+            // Force start the game
+            if (words.length > 0) {
+                showNextWord();
+            }
+        });
+    </script>
+</body>
+</html>
