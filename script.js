@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let incorrectAnswers = 0;
     let streakLength = 0;
     let currentBlanksCount = 0;
+    let questionQueue = [];
 
     fileInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
@@ -43,15 +44,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showNextWord() {
-        if (words.length === 0 && incorrectWords.length === 0) {
+        if (words.length === 0 && questionQueue.length === 0) {
             endGame();
             return;
         }
-        if (words.length === 0 && incorrectWords.length > 0) {
-            words = incorrectWords;
-            incorrectWords = [];
+        if (words.length === 0 && questionQueue.length > 0) {
+            words.push(...questionQueue.splice(0, questionQueue.length));
         }
-        const wordData = words[Math.floor(Math.random() * words.length)];
+        const wordData = words.shift();
         currentWord = wordData.word;
         currentBlanks = createBlanks(currentWord);
         console.log('Current word:', currentWord); // Debugging line
@@ -69,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentBlanks = newBlanks;
                 gameContainer.innerHTML = `<p>${currentBlanks}</p>`;
                 setTimeout(() => {
-                    words = words.filter(wordData => wordData.word !== currentWord);
                     showNextWord();
                 }, 1500);
             } else {
@@ -83,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!incorrectWords.includes(currentWord)) {
                 incorrectWords.push(currentWord);
             }
+            questionQueue.push({ word: currentWord, comment: words.find(w => w.word === currentWord).comment });
             gameContainer.innerHTML += `<p style="color: red;">Incorrect answer!</p>`;
             setTimeout(() => {
                 showNextWord();
