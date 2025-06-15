@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let streakLength = 0;
     let currentBlanksCount = 0;
     let questionQueue = [];
+    let recentQuestions = [];
 
     fileInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
@@ -48,7 +49,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (words.length === 0 && questionQueue.length > 0) {
             words.push(...questionQueue.splice(0, questionQueue.length));
         }
-        const wordData = words.shift();
+        let wordData;
+        do {
+            wordData = words.shift();
+        } while (recentQuestions.includes(wordData.word) && words.length > 0);
+
+        recentQuestions.push(wordData.word);
+        if (recentQuestions.length > 2) {
+            recentQuestions.shift();
+        }
+
         currentWord = wordData.word;
         currentBlanks = createBlanks(currentWord);
         gameContainer.innerHTML = `<p>${currentBlanks}</p><p>${wordData.comment}</p>`;
@@ -62,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 correctAnswers++;
                 streakLength++;
                 currentBlanks = newBlanks;
-                gameContainer.innerHTML = `<p>${currentBlanks}</p>`;
+                gameContainer.innerHTML = `<p>${currentBlanks}</p><p style="color: green;">Correct answer!</p>`;
                 setTimeout(() => {
                     showNextWord();
                 }, 1500);
