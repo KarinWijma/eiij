@@ -37,6 +37,7 @@
                         const [word, comment] = line.split(',');
                         return { word, comment };
                     });
+                    console.log('Words loaded:', words); // Debugging line
                     shuffleArray(words); // Shuffle the words array
                     showNextWord();
                 };
@@ -56,7 +57,9 @@
             }
 
             function showNextWord() {
-                if (words;
+                if (words.length === 0 && questionQueue.length === 0) {
+                    endGame();
+                    return;
                 }
                 if (words.length === 0 && questionQueue.length > 0) {
                     words.push(...questionQueue.splice(0, questionQueue.length));
@@ -73,6 +76,7 @@
 
                 currentWord = wordData.word;
                 currentBlanks = createBlanks(currentWord);
+                console.log('Current word:', currentWord); // Debugging line
                 gameContainer.innerHTML = `<p>${currentBlanks}</p><p>${wordData.comment}</p>`;
             }
 
