@@ -35,14 +35,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function createBlanks(word) {
-        currentBlanksCount = (word.match(/ij/g) || []).length + (word.match(/ei/g) || []).length;
+       Count = (word.match(/ij/g) || []).length + (word.match(/ei/g) || []).length;
         return word.replace(/ij/g, '__').replace(/ei/g, '__');
     }
 
     function showNextWord() {
-        if (words.length === 0) {
+        if (words.length === 0 && incorrectWords.length === 0) {
             endGame();
             return;
+        }
+        if (words.length === 0 && incorrectWords.length > 0) {
+            words = incorrectWords;
+            incorrectWords = [];
         }
         const wordData = words[Math.floor(Math.random() * words.length)];
         currentWord = wordData.word;
