@@ -4,8 +4,6 @@ let huidigeWoord = "";
 let blanks = [];
 let keuzesIndex = 0;
 let foutenLijst = [];
-let herhaalWachtrij = [];
-let beurtTeller = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
     fetch("woorden.xlsx")
@@ -26,38 +24,11 @@ document.addEventListener("DOMContentLoaded", () => {
 function startSpel() {
     huidigeIndex = 0;
     foutenLijst = [];
-    herhaalWachtrij = [];
-    beurtTeller = 0;
     woorden = woorden.sort(() => Math.random() - 0.5);
     toonVolgendWoord();
 }
 
 function toonVolgendWoord() {
-    beurtTeller++;
-
-    // Kijk of er een woord in de wachtrij zit dat lang genoeg heeft gewacht
-    let herhaalIndex = herhaalWachtrij.findIndex(item => beurtTeller - item.foutBeurt >= 2);
-    if (herhaalIndex !== -1) {
-        const item = herhaalWachtrij.splice(herhaalIndex, 1)[0];
-        huidigeWoord = item.woord;
-        document.getElementById("commentaar").innerText = `Hint: ${item.commentaar}`;
-        blanks = [item.juiste];
-        keuzesIndex = 0;
-
-        let start = huidigeWoord.indexOf(item.juiste);
-        let eind = start + item.juiste.length;
-
-        let parts = [
-            huidigeWoord.slice(0, start),
-            "__",
-            huidigeWoord.slice(eind)
-        ];
-
-        document.getElementById("woord-container").innerHTML = parts.join("");
-        document.getElementById("feedback").innerText = "";
-        return;
-    }
-
     if (huidigeIndex >= woorden.length) {
         document.getElementById("woord-container").innerText = "Klaar!";
         document.getElementById("keuzes").style.display = "none";
@@ -108,8 +79,10 @@ function kies(keuze) {
         let gemarkeerd;
 
         if (keuze === juiste) {
+            // Correcte keuze: toon het woord normaal
             gemarkeerd = huidigeWoord;
         } else {
+            // Foute keuze: toon het juiste woord, maar markeer het juiste deel rood
             gemarkeerd =
                 huidigeWoord.slice(0, start) +
                 `<span class="incorrect">${juiste}</span>` +
@@ -125,13 +98,6 @@ function kies(keuze) {
             gekozen: keuze,
             correct: juiste
         });
-
-        herhaalWachtrij.push({
-            woord: huidigeWoord,
-            juiste: juiste,
-            commentaar: document.getElementById("commentaar").innerText.replace("Hint: ", ""),
-            foutBeurt: beurtTeller
-        });
     }
 
     keuzesIndex++;
@@ -142,6 +108,7 @@ function kies(keuze) {
         }, 1500);
     }
 }
+
 
 function toonFouten() {
     const foutenContainer = document.getElementById("fouten-lijst");
