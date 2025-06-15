@@ -20,10 +20,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const [word, comment] = line.split(',');
                 return { word, comment };
             });
+            shuffleArray(words); // Shuffle the words array
             showNextWord();
         };
         reader.readAsText(file);
     });
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
 
     function createBlanks(word) {
         return word.replace(/ij/g, '__').replace(/ei/g, '__');
