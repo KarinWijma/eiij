@@ -16,7 +16,7 @@
             const fileInput = document.getElementById('fileInput');
             const gameContainer = document.getElementById('game-container');
             const ijButton = document.getElementById('ijButton');
-            const eiButton = document.getElementById('eiButton');
+           Button = document.getElementById('eiButton');
             let words = [];
             let currentWord = '';
             let currentBlanks = '';
