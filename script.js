@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let correctAnswers = 0;
     let incorrectAnswers = 0;
     let streakLength = 0;
+    let currentBlanksCount = 0;
 
     fileInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
@@ -34,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function createBlanks(word) {
+        currentBlanksCount = (word.match(/ij/g) || []).length + (word.match(/ei/g) || []).length;
         return word.replace(/ij/g, '__').replace(/ei/g, '__');
     }
 
@@ -49,22 +51,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checkAnswer(answer) {
-        const originalWord = currentWord.replace('__', answer);
-        if (originalWord === currentWord) {
-            correctAnswers++;
-            streakLength++;
-            gameContainer.innerHTML = `<p>${currentWord}</p>`;
-            setTimeout(() => {
-                words = words.filter(wordData => wordData.word !== currentWord);
-                showNextWord();
-            }, 1500);
+        const blanksCount = (currentBlanks.match(/__/g) || []).length;
+        if (blanksCount > 0) {
+            currentBlanks = currentBlanks.replace('__', answer);
+            gameContainer.innerHTML = `<p>${currentBlanks}</p>`;
+            if (currentBlanks === currentWord) {
+                correctAnswers++;
+                streakLength++;
+                setTimeout(() => {
+                    words = words.filter(wordData => wordData.word !== currentWord);
+                    showNextWord();
+                }, 1500);
+            } else {
+                currentBlanksCount--;
+            }
         } else {
             incorrectAnswers++;
             streakLength = 0;
             if (!incorrectWords.includes(currentWord)) {
                 incorrectWords.push(currentWord);
             }
-            showNextWord();
+            gameContainer.innerHTML += `<p style="color: red;">Incorrect answer!</p>`;
+            setTimeout(() => {
+                showNextWord();
+            }, 1500);
         }
     }
 
