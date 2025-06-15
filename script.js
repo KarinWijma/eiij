@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const fileInput document.getElementById('fileInput');
+    const fileInput = document.getElementById('fileInput');
     const gameContainer = document.getElementById('game-container');
     const ijButton = document.getElementById('ijButton');
     const eiButton = document.getElementById('eiButton');
