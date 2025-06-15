@@ -63,10 +63,7 @@
                     endGame();
                     return;
                 }
-                if (words.length === 0 && questionQueue.length > 0) {
-                    words.push(...questionQueue.splice(0, questionQueue.length));
-                }
-                let wordData;
+                if;
                 do {
                     wordData = words.shift();
                 } while (recentQuestions.includes(wordData.word) && words.length > 0);
