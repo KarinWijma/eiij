@@ -31,24 +31,34 @@ function toonVolgendWoord() {
         document.getElementById("keuzes").style.display = "none";
         return;
     }
+
     const item = woorden[huidigeIndex];
     huidigeWoord = item.woord;
     document.getElementById("commentaar").innerText = `Hint: ${item.commentaar}`;
     blanks = [];
     keuzesIndex = 0;
+
     let temp = huidigeWoord;
-    let regex = /(ei|ij)/g; // Correcte regex
-    let match;
-    let lastIndex = 0;
-    let parts = [];
-    while ((match = regex.exec(temp)) !== null) {
-        parts.push(temp.slice(lastIndex, match.index));
+    let regex = /(ei|ij)/;
+    let match = regex.exec(temp);
+
+    if (match) {
+        let start = match.index;
+        let eind = start + match[0].length;
         blanks.push(match[0]);
-        parts.push("__");
-        lastIndex = match.index + match[0].length;
+
+        let parts = [
+            temp.slice(0, start),
+            "__",
+            temp.slice(eind)
+        ];
+
+        document.getElementById("woord-container").innerHTML = parts.join("");
+    } else {
+        // Geen ei/ij gevonden, toon het woord gewoon
+        document.getElementById("woord-container").innerText = temp;
     }
-    parts.push(temp.slice(lastIndex));
-    document.getElementById("woord-container").innerHTML = parts.join("");
+
     document.getElementById("feedback").innerText = "";
 }
 
