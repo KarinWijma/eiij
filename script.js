@@ -53,7 +53,7 @@
             }
 
             function createBlanks(word) {
-               anksCount = (word.match(/ij/g) || []).length + (word.match(/ei/g) || []).length;
+                currentBlanksCount = (word.match(/ij/g) || []).length + (word.match(/ei/g) || []).length;
                 return word.replace(/ij/g, '__').replace(/ei/g, '__');
             }
 
@@ -64,7 +64,7 @@
                     return;
                 }
                 if (words.length === 0 && questionQueue.length > 0) {
-                    words.push(...questionQueue.splice(0, questionQueue.length));
+                   questionQueue.splice(0, questionQueue.length));
                 }
                 let wordData;
                 do {
