@@ -40,13 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showNextWord() {
-        if (words.length === 0 && incorrectWords.length === 0) {
+        if (words.length === 0) {
             endGame();
             return;
-        }
-        if (words.length === 0 && incorrectWords.length > 0) {
-            words = incorrectWords;
-            incorrectWords = [];
         }
         const wordData = words[Math.floor(Math.random() * words.length)];
         currentWord = wordData.word;
@@ -85,3 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ijButton.addEventListener('click', () => checkAnswer('ij'));
     eiButton.addEventListener('click', () => checkAnswer('ei'));
 
+    function endGame() {
+        alert(`Game Over!\nCorrect Answers: ${correctAnswers}\nIncorrect Answers: ${incorrectAnswers}\nStreak Length: ${streakLength}\nIncorrect Words: ${incorrectWords.join(', ')}`);
+    }
+});
