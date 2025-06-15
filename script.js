@@ -18,12 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const reader = new FileReader();
         reader.onload = (e) => {
             const text = e.target.result;
-            console.log('CSV content:', text); // Debugging line
             words = text.split('\n').map(line => {
                 const [word, comment] = line.split(',');
                 return { word, comment };
             });
-            console.log('Words array:', words); // Debugging line
             shuffleArray(words); // Shuffle the words array
             showNextWord();
         };
@@ -39,7 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createBlanks(word) {
         currentBlanksCount = (word.match(/ij/g) || []).length + (word.match(/ei/g) || []).length;
-        console.log('Current blanks count:', currentBlanksCount); // Debugging line
         return word.replace(/ij/g, '__').replace(/ei/g, '__');
     }
 
@@ -54,13 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const wordData = words.shift();
         currentWord = wordData.word;
         currentBlanks = createBlanks(currentWord);
-        console.log('Current word:', currentWord); // Debugging line
         gameContainer.innerHTML = `<p>${currentBlanks}</p><p>${wordData.comment}</p>`;
     }
 
     function checkAnswer(answer) {
         const blanksCount = (currentBlanks.match(/__/g) || []).length;
-        console.log('Blanks count:', blanksCount); // Debugging line
         if (blanksCount > 0) {
             const newBlanks = currentBlanks.replace('__', answer);
             if (newBlanks === currentWord) {
@@ -75,6 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentBlanksCount--;
                 currentBlanks = newBlanks;
                 gameContainer.innerHTML = `<p>${currentBlanks}</p><p style="color: red;">Incorrect answer!</p>`;
+                setTimeout(() => {
+                    showNextWord();
+                }, 1500);
             }
         } else {
             incorrectAnswers++;
