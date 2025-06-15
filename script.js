@@ -4,16 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IJ/EI Spel</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
 <body>
-    <input type="file" id="fileInput">
     <div id="game-container"></div>
     <button id="ijButton">IJ</button>
     <button id="eiButton">EI</button>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const fileInput = document.getElementById('fileInput');
             const gameContainer = document.getElementById('game-container');
             const ijButton = document.getElementById('ijButton');
             const eiButton = document.getElementById('eiButton');
@@ -28,20 +27,23 @@
             let questionQueue = [];
             let recentQuestions = [];
 
-            fileInput.addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const text = e.target.result;
-                    words = text.split('\n').map(line => {
-                        const [word, comment] = line.split(',');
+            // Load the Excel file
+            fetch('woorden.xlsx')
+                .then(response => response.arrayBuffer())
+                .then(data => {
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheetName = workbook.SheetNames[0];
+                    const sheet = workbook.Sheets[sheetName];
+                    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                    words = rows.map(row => {
+                        const [word, comment] = row;
                         return { word, comment };
                     });
+                    console.log('Words loaded:', words); // Check if words are loaded
                     shuffleArray(words); // Shuffle the words array
                     showNextWord(); // Start the game immediately after loading words
-                };
-                reader.readAsText(file);
-            });
+                })
+                .catch(error => console.error('Error:', error));
 
             function shuffleArray(array) {
                 for (let i = array.length - 1; i > 0; i--) {
@@ -51,11 +53,12 @@
             }
 
             function createBlanks(word) {
-                currentBlanksCount = (word.match(/ij/g) || []).length + (word.match(/ei/g) || []).length;
+               anksCount = (word.match(/ij/g) || []).length + (word.match(/ei/g) || []).length;
                 return word.replace(/ij/g, '__').replace(/ei/g, '__');
             }
 
             function showNextWord() {
+                console.log('Showing next word'); // Check if function is called
                 if (words.length === 0 && questionQueue.length === 0) {
                     endGame();
                     return;
