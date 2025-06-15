@@ -76,13 +76,14 @@ function kies(keuze) {
     const nieuwHTML = huidigHTML.replace("__", correctie);
     woordEl.innerHTML = nieuwHTML;
 
-    if (keuze !== juiste) {
-        foutenLijst.push({
-            woord: huidigeWoord,
-            gekozen: keuze,
-            correct: juiste
-        });
-    }
+    if (keuze !== juiste && !foutenLijst.some(f => f.woord === huidigeWoord)) {
+    foutenLijst.push({
+        woord: huidigeWoord,
+        gekozen: keuze,
+        correct: juiste
+    });
+}
+
 
     keuzesIndex++;
     if (keuzesIndex >= blanks.length) {
