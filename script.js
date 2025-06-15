@@ -64,7 +64,7 @@
                     return;
                 }
                 if (words.length === 0 && questionQueue.length > 0) {
-                    words.pushquestionQueue.splice(0, questionQueue.length));
+                    words.push(...questionQueue.splice(0, questionQueue.length));
                 }
                 let wordData;
                 do {
