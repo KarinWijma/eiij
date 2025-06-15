@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createBlanks(word) {
         currentBlanksCount = (word.match(/ij/g) || []).length + (word.match(/ei/g) || []).length;
+        console.log('Current blanks count:', currentBlanksCount); // Debugging line
         return word.replace(/ij/g, '__').replace(/ei/g, '__');
     }
 
@@ -53,23 +54,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const wordData = words[Math.floor(Math.random() * words.length)];
         currentWord = wordData.word;
         currentBlanks = createBlanks(currentWord);
+        console.log('Current word:', currentWord); // Debugging line
         gameContainer.innerHTML = `<p>${currentBlanks}</p><p>${wordData.comment}</p>`;
     }
 
     function checkAnswer(answer) {
         const blanksCount = (currentBlanks.match(/__/g) || []).length;
+        console.log('Blanks count:', blanksCount); // Debugging line
         if (blanksCount > 0) {
-            currentBlanks = currentBlanks.replace('__', answer);
-            gameContainer.innerHTML = `<p>${currentBlanks}</p>`;
-            if (currentBlanks === currentWord) {
+            const newBlanks = currentBlanks.replace('__', answer);
+            if (newBlanks === currentWord) {
                 correctAnswers++;
                 streakLength++;
+                currentBlanks = newBlanks;
+                gameContainer.innerHTML = `<p>${currentBlanks}</p>`;
                 setTimeout(() => {
                     words = words.filter(wordData => wordData.word !== currentWord);
                     showNextWord();
                 }, 1500);
             } else {
                 currentBlanksCount--;
+                currentBlanks = newBlanks;
+                gameContainer.innerHTML = `<p>${currentBlanks}</p><p style="color: red;">Incorrect answer!</p>`;
             }
         } else {
             incorrectAnswers++;
