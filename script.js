@@ -68,22 +68,37 @@ function toonVolgendWoord() {
 function kies(keuze) {
     const juiste = blanks[keuzesIndex];
     const woordEl = document.getElementById("woord-container");
-    const huidigHTML = woordEl.innerHTML;
 
-    let kleur = keuze === juiste ? "correct" : "incorrect";
-    let correctie = `<span class="${kleur}">${keuze}</span>`;
+    let regex = /(ei|ij)/;
+    let match = regex.exec(huidigeWoord);
 
-    const nieuwHTML = huidigHTML.replace("__", correctie);
-    woordEl.innerHTML = nieuwHTML;
+    if (match) {
+        let start = match.index;
+        let eind = start + match[0].length;
+
+        let gemarkeerd;
+
+        if (keuze === juiste) {
+            // Correcte keuze: toon het woord normaal
+            gemarkeerd = huidigeWoord;
+        } else {
+            // Foute keuze: toon het juiste woord, maar markeer het juiste deel rood
+            gemarkeerd =
+                huidigeWoord.slice(0, start) +
+                `<span class="incorrect">${juiste}</span>` +
+                huidigeWoord.slice(eind);
+        }
+
+        woordEl.innerHTML = gemarkeerd;
+    }
 
     if (keuze !== juiste && !foutenLijst.some(f => f.woord === huidigeWoord)) {
-    foutenLijst.push({
-        woord: huidigeWoord,
-        gekozen: keuze,
-        correct: juiste
-    });
-}
-
+        foutenLijst.push({
+            woord: huidigeWoord,
+            gekozen: keuze,
+            correct: juiste
+        });
+    }
 
     keuzesIndex++;
     if (keuzesIndex >= blanks.length) {
@@ -93,6 +108,7 @@ function kies(keuze) {
         }, 1500);
     }
 }
+
 
 function toonFouten() {
     const foutenContainer = document.getElementById("fouten-lijst");
