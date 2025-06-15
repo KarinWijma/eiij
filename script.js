@@ -3,6 +3,7 @@ let huidigeIndex = 0;
 let huidigeWoord = "";
 let blanks = [];
 let keuzesIndex = 0;
+let foutenLijst = [];
 
 document.addEventListener("DOMContentLoaded", () => {
     fetch("woorden.xlsx")
@@ -11,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const workbook = XLSX.read(data, { type: "array" });
             const sheet = workbook.Sheets[workbook.SheetNames[0]];
             const json = XLSX.utils.sheet_to_json(sheet, { header: ["woord", "commentaar"], defval: "" });
-            woorden = json.filter(row => row.woord); // filter lege rijen
+            woorden = json.filter(row => row.woord);
             startSpel();
         })
         .catch(err => {
@@ -22,7 +23,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function startSpel() {
     huidigeIndex = 0;
-    woorden = woorden.sort(() => Math.random() - 0.5); // shuffle de woordenlijst
+    foutenLijst = [];
+    woorden = woorden.sort(() => Math.random() - 0.5);
     toonVolgendWoord();
 }
 
@@ -30,6 +32,7 @@ function toonVolgendWoord() {
     if (huidigeIndex >= woorden.length) {
         document.getElementById("woord-container").innerText = "Klaar!";
         document.getElementById("keuzes").style.display = "none";
+        toonFouten();
         return;
     }
 
@@ -56,7 +59,6 @@ function toonVolgendWoord() {
 
         document.getElementById("woord-container").innerHTML = parts.join("");
     } else {
-        // Geen ei/ij gevonden, toon het woord gewoon
         document.getElementById("woord-container").innerText = temp;
     }
 
@@ -71,9 +73,16 @@ function kies(keuze) {
     let kleur = keuze === juiste ? "correct" : "incorrect";
     let correctie = `<span class="${kleur}">${keuze}</span>`;
 
-    // Vervang de eerste "__" met de keuze
     const nieuwHTML = huidigHTML.replace("__", correctie);
     woordEl.innerHTML = nieuwHTML;
+
+    if (keuze !== juiste) {
+        foutenLijst.push({
+            woord: huidigeWoord,
+            gekozen: keuze,
+            correct: juiste
+        });
+    }
 
     keuzesIndex++;
     if (keuzesIndex >= blanks.length) {
@@ -82,4 +91,19 @@ function kies(keuze) {
             toonVolgendWoord();
         }, 1500);
     }
+}
+
+function toonFouten() {
+    const foutenContainer = document.getElementById("fouten-lijst");
+    if (foutenLijst.length === 0) {
+        foutenContainer.innerText = "Goed gedaan! Geen fouten gemaakt.";
+        return;
+    }
+
+    let html = "<h3>Fout beantwoorde woorden:</h3><ul>";
+    foutenLijst.forEach(fout => {
+        html += `<li>${fout.woord} – gekozen: <strong>${fout.gekozen}</strong>, correct: <strong>${fout.correct}</strong></li>`;
+    });
+    html += "</ul>";
+    foutenContainer.innerHTML = html;
 }
