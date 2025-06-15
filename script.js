@@ -60,7 +60,7 @@ function kies(keuze) {
     let kleur = keuze === juiste ? "correct" : "incorrect";
     let correctie = `<span class="${kleur}">${juiste}</span>`;
     split[keuzesIndex] += correctie;
-    woordEl.innerHTML = split.join("__");
+    woordEl.innerHTML = split.join("");
     keuzesIndex++;
     if (keuzesIndex >= blanks.length) {
         setTimeout(() => {
