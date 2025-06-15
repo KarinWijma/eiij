@@ -38,7 +38,7 @@
                         return { word, comment };
                     });
                     shuffleArray(words); // Shuffle the words array
-                    showNextWord();
+                    showNextWord(); // Start the game immediately after loading words
                 };
                 reader.readAsText(file);
             });
@@ -60,7 +60,7 @@
                     endGame();
                     return;
                 }
-               words.length === 0 && questionQueue.length > 0) {
+                if (words.length === 0 && questionQueue.length > 0) {
                     words.push(...questionQueue.splice(0, questionQueue.length));
                 }
                 let wordData;
